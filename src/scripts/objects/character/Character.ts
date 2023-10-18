@@ -26,11 +26,14 @@ export default class Character extends Phaser.GameObjects.Sprite {
       this.play(AnimationKeys.CharacterAttack1)
     })
 
+    this.scene.events.on(`Hurt-${id}`, () => {
+      this.play(AnimationKeys.CharacterHurt)
+    })
+
     this.on('animationcomplete', (animation, frame) => {
       switch (animation.key) {
         case AnimationKeys.CharacterAttack1:
           this.scene.events.emit(`Skill-${id}`)
-
           break
 
         default:

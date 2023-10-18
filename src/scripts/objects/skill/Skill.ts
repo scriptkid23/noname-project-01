@@ -6,7 +6,7 @@ export default class Skill extends Phaser.GameObjects.Sprite {
     super(scene, x, y, TextureKeys.Skill)
 
     this.createAnimations()
-    this.play(AnimationKeys.UntilStart)
+    this.play(AnimationKeys.SkillStart)
 
     scene.physics.add.existing(this)
     scene.add.existing(this)

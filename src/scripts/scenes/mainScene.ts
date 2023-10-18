@@ -108,18 +108,30 @@ export default class MainScene extends Phaser.Scene {
       this.socket.emit(EventTypes.InitSkill)
     })
 
+    this.events.on(`Hurt-${this.socket.id}`, () => {})
+
     this.socket.on(EventTypes.SkillFrom, skillPosion => {
-      let skill = new Skill(this, skillPosion.coordinate.x, skillPosion.coordinate.y)
+      const isFlip = skillPosion.to > this.width / 2 ? false : true
+      let skill = new Skill(this, skillPosion.coordinate.x, skillPosion.coordinate.y).setFlip(isFlip, false)
+
       this.add.existing(skill)
       this.tweens.add({
         targets: skill,
         x: skillPosion.to,
+
         duration: 500,
         ease: 'Linear',
         onComplete: () => {
-          skill.play(AnimationKeys.UntilEnd)
+          skill.play(AnimationKeys.SkillEnd)
+          skill.on('animationcomplete', () => {
+            this.socket.id !== skillPosion.owner && this.socket.emit(EventTypes.BeingAttacked, this.socket.id)
+            skill.destroy()
+          })
         }
       })
+    })
+    this.socket.on(EventTypes.ActivateBeingAttacked, target => {
+      this.events.emit(`Hurt-${target}`)
     })
     this.socket.on(EventTypes.ActivateCurrentlyAttacking, id => {
       this.events.emit(`active-attacking-${id}`)
