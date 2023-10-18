@@ -87,3 +87,14 @@ export enum Team {
   Red,
   Blue
 }
+
+export enum InstructionKeys {
+  Up = 1,
+  Right = 2,
+  Down = 3,
+  Left = 4
+}
+
+export enum EventKeys {
+  Press = 'press'
+}

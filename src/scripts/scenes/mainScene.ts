@@ -2,7 +2,9 @@ import PhaserLogo from '../objects/phaserLogo'
 import FpsText from '../objects/fpsText'
 import { Socket, io } from 'socket.io-client'
 import {
+  EventKeys,
   EventTypes,
+  InstructionKeys,
   SceneKeys,
   Team,
   TextureKeys,
@@ -15,6 +17,7 @@ import { Players } from '../../types'
 import { Scene } from 'phaser'
 import WaterReflect from '../objects/WaterReflect'
 import Character from '../objects/character/Character'
+import ChallengeFactory from '../objects/challenge/ChallengeFactory'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -26,12 +29,12 @@ export default class MainScene extends Phaser.Scene {
   private bigClouds: Phaser.GameObjects.TileSprite
   private socket: Socket
   private players: Players = {}
-  private canPlay: boolean = false
   private ground: Phaser.Tilemaps.TilemapLayer
   private width: number
   private height: number
   private characterGroup: Phaser.Physics.Arcade.Group
   private team: Team
+  private challengeFactory: ChallengeFactory
 
   constructor() {
     super(SceneKeys.MainScene)
@@ -91,10 +94,15 @@ export default class MainScene extends Phaser.Scene {
 
       countdownTimer = this.time.addEvent({
         delay: 1000,
-        callback: this.updateCountdown,
+        callback: () => this.updateCountdown(this),
         loop: true
       })
     })
+
+    this.input.keyboard?.on('keydown-UP', this.handleUp, this)
+    this.input.keyboard?.on('keydown-DOWN', this.handleDown, this)
+    this.input.keyboard?.on('keydown-LEFT', this.handleLeft, this)
+    this.input.keyboard?.on('keydown-RIGHT', this.handleRight, this)
   }
 
   createOwnPlayer(player) {
@@ -110,15 +118,14 @@ export default class MainScene extends Phaser.Scene {
     this.players[player.id] = character
   }
 
-  updateCountdown() {
+  updateCountdown(scene: Phaser.Scene) {
     countdownValue--
     countdownText.setText(countdownValue)
 
     if (countdownValue <= 0) {
       countdownText.destroy()
       countdownTimer.remove(false)
-
-      this.canPlay = true
+      this.challengeFactory = new ChallengeFactory(scene)
     }
   }
 
@@ -161,8 +168,27 @@ export default class MainScene extends Phaser.Scene {
     this.bigClouds.tilePositionX += 0.5
   }
 
+  private handleUp() {
+    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Up)
+  }
+
+  private handleDown() {
+    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Down)
+  }
+
+  private handleLeft() {
+    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Left)
+  }
+
+  private handleRight() {
+    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Right)
+  }
+
   update() {
     this.setCloudParallax()
     // this.fpsText.update()
+    if (this.challengeFactory) {
+      this.challengeFactory.preUpdate()
+    }
   }
 }
