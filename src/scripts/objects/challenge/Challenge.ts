@@ -55,7 +55,6 @@ export default class Challenge extends Phaser.GameObjects.Container {
         this.size -= 1
 
         if (this.size === 0) {
-          console.log('Challenge Destroyed')
           setTimeout(() => {
             this.destroy()
           }, 1000)

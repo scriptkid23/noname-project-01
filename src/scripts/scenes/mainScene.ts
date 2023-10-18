@@ -2,6 +2,7 @@ import PhaserLogo from '../objects/phaserLogo'
 import FpsText from '../objects/fpsText'
 import { Socket, io } from 'socket.io-client'
 import {
+  AnimationKeys,
   EventKeys,
   EventTypes,
   InstructionKeys,
@@ -18,6 +19,8 @@ import { Scene } from 'phaser'
 import WaterReflect from '../objects/WaterReflect'
 import Character from '../objects/character/Character'
 import ChallengeFactory from '../objects/challenge/ChallengeFactory'
+import { createRandomChallenge } from '../utils'
+import Skill from '../objects/skill/Skill'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -61,7 +64,6 @@ export default class MainScene extends Phaser.Scene {
     this.readyButton(this.socket)
 
     this.socket.on(EventTypes.FetchPlayers, players => {
-      console.log(`${EventTypes.FetchPlayers}: `, players)
       Object.keys(players).map(key => {
         if (key === this.socket.id) {
           this.createOwnPlayer(players[key])
@@ -72,7 +74,6 @@ export default class MainScene extends Phaser.Scene {
     })
 
     this.socket.on(EventTypes.PlayerJoined, player => {
-      console.log(`${EventTypes.PlayerJoined}: `, player)
       this.createOtherPlayer(player)
     })
 
@@ -97,6 +98,31 @@ export default class MainScene extends Phaser.Scene {
         callback: () => this.updateCountdown(this),
         loop: true
       })
+    })
+
+    this.events.on(`Attack`, () => {
+      this.socket.emit(EventTypes.CurrentlyAttacking)
+    })
+
+    this.events.on(`Skill-${this.socket.id}`, () => {
+      this.socket.emit(EventTypes.InitSkill)
+    })
+
+    this.socket.on(EventTypes.SkillFrom, skillPosion => {
+      let skill = new Skill(this, skillPosion.coordinate.x, skillPosion.coordinate.y)
+      this.add.existing(skill)
+      this.tweens.add({
+        targets: skill,
+        x: skillPosion.to,
+        duration: 500,
+        ease: 'Linear',
+        onComplete: () => {
+          skill.play(AnimationKeys.UntilEnd)
+        }
+      })
+    })
+    this.socket.on(EventTypes.ActivateCurrentlyAttacking, id => {
+      this.events.emit(`active-attacking-${id}`)
     })
 
     this.input.keyboard?.on('keydown-UP', this.handleUp, this)
@@ -125,7 +151,7 @@ export default class MainScene extends Phaser.Scene {
     if (countdownValue <= 0) {
       countdownText.destroy()
       countdownTimer.remove(false)
-      this.challengeFactory = new ChallengeFactory(scene)
+      this.challengeFactory = new ChallengeFactory(scene, createRandomChallenge())
     }
   }
 

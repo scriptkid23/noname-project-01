@@ -8,14 +8,17 @@ enum ChallengeFactoryStatus {
   Empty
 }
 export default class ChallengeFactory extends Phaser.GameObjects.Layer {
-  private challengeList: Challenge[]
+  private challengeList: Challenge[] = []
   private status: ChallengeFactoryStatus = ChallengeFactoryStatus.Processing
 
   private currentChallenge: Challenge | undefined
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, challenges: any) {
     super(scene)
-    this.challengeList = [new Challenge(scene, [1, 1, 3, 1, 2]), new Challenge(scene, [1, 3, 1, 4, 4, 1, 2, 3, 3, 1])]
+
+    challenges.map(challenge => {
+      this.challengeList = [...this.challengeList, new Challenge(scene, challenge)]
+    })
 
     this.initChallenge()
   }
@@ -55,7 +58,8 @@ export default class ChallengeFactory extends Phaser.GameObjects.Layer {
         break
       }
       case ChallengeFactoryStatus.Done:
-        console.log('Done')
+        this.scene.events.emit('Attack')
+
         this.status = ChallengeFactoryStatus.Processing
         break
 
