@@ -7,7 +7,9 @@ export enum EventTypes {
   LeaveRoom = 'LEAVE_ROOM',
   FetchPlayers = "FETCH_PLAYERS",
   PlayerJoined = 'PLAYER_JOINED', // 
-  PlayerLeft = "PLAYER_LEFF"
+  PlayerLeft = "PLAYER_LEFF",
+  PlayerReady = "PLAYER_READY",
+  CanPlay = "CAN_PLAY",
 }
 
 
