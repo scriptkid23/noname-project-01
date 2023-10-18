@@ -83,3 +83,7 @@ export enum SceneKeys {
   PreloadScene = "PreloadScene",
 }
 
+export enum Team {
+  Red,
+  Blue
+}

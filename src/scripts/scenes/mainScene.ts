@@ -1,10 +1,20 @@
 import PhaserLogo from '../objects/phaserLogo'
 import FpsText from '../objects/fpsText'
 import { Socket, io } from 'socket.io-client'
-import { EventTypes, SceneKeys, TextureKeys, TileLayerKeys, TileLayerKeysType, TileLayerName, TileMapKeys } from '../../constants'
+import {
+  EventTypes,
+  SceneKeys,
+  Team,
+  TextureKeys,
+  TileLayerKeys,
+  TileLayerKeysType,
+  TileLayerName,
+  TileMapKeys
+} from '../../constants'
 import { Players } from '../../types'
 import { Scene } from 'phaser'
 import WaterReflect from '../objects/WaterReflect'
+import Character from '../objects/character/Character'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -13,14 +23,15 @@ var countdownTimer
 export default class MainScene extends Phaser.Scene {
   fpsText
 
-  private bigClouds: Phaser.GameObjects.TileSprite;
+  private bigClouds: Phaser.GameObjects.TileSprite
   private socket: Socket
-  private players: Players
+  private players: Players = {}
   private canPlay: boolean = false
   private ground: Phaser.Tilemaps.TilemapLayer
-  private width: number;
-  private height: number;
-
+  private width: number
+  private height: number
+  private characterGroup: Phaser.Physics.Arcade.Group
+  private team: Team
 
   constructor() {
     super(SceneKeys.MainScene)
@@ -34,8 +45,13 @@ export default class MainScene extends Phaser.Scene {
     this.width = this.scale.width
     this.height = this.scale.height
 
+    this.characterGroup = this.physics.add.group()
 
     this.loadMap(map, TileLayerKeys)
+
+    this.cameras.main.setBounds(0, 0, this.width, this.height)
+    this.physics.world.setBounds(0, 0, this.width, this.height)
+    this.physics.add.collider(this.characterGroup, this.ground)
 
     this.socket.emit(EventTypes.JoinRoom, 'room00')
 
@@ -43,13 +59,25 @@ export default class MainScene extends Phaser.Scene {
 
     this.socket.on(EventTypes.FetchPlayers, players => {
       console.log(`${EventTypes.FetchPlayers}: `, players)
+      Object.keys(players).map(key => {
+        if (key === this.socket.id) {
+          this.createOwnPlayer(players[key])
+        } else {
+          this.createOtherPlayer(players[key])
+        }
+      })
     })
 
     this.socket.on(EventTypes.PlayerJoined, player => {
       console.log(`${EventTypes.PlayerJoined}: `, player)
+      this.createOtherPlayer(player)
     })
 
-    this.socket.on(EventTypes.PlayerLeft, id => {})
+    this.socket.on(EventTypes.PlayerLeft, id => {
+      if (!this.players[id]) return
+
+      this.players[id].destroy()
+    })
 
     this.socket.on(EventTypes.CanPlay, canPlay => {
       if (!canPlay) return
@@ -67,6 +95,19 @@ export default class MainScene extends Phaser.Scene {
         loop: true
       })
     })
+  }
+
+  createOwnPlayer(player) {
+    const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
+    this.characterGroup.add(character)
+    this.players[player.id] = character
+    this.team = player.team
+  }
+
+  createOtherPlayer(player) {
+    const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
+    this.characterGroup.add(character)
+    this.players[player.id] = character
   }
 
   updateCountdown() {
@@ -91,7 +132,7 @@ export default class MainScene extends Phaser.Scene {
     rect.on('pointerdown', function () {
       socket.emit(EventTypes.PlayerReady)
       rect.destroy()
-      // Thêm các xử lý khác tại đây
+      //TODO:
     })
   }
 
@@ -108,31 +149,16 @@ export default class MainScene extends Phaser.Scene {
       if (type.layer === TileLayerName.Ground) {
         layer.setCollisionByProperty({ collides: true })
         this.ground = layer
-
-        // active debug for tiled
-        // const debugGraphics = this.add.graphics().setAlpha(0.7);
-
-        // layer.renderDebug(debugGraphics, {
-        //   tileColor: null,
-        //   collidingTileColor: new Phaser.Display.Color(243, 234, 48,255),
-        //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-        // })
       }
       this.add.existing(layer)
     })
 
     new WaterReflect(this, this.width / 2, this.height / 2 + 63)
-    this.bigClouds = this.add.tileSprite(
-      this.width / 2,
-      this.height / 2 + 4,
-      this.width,
-      101,
-      TextureKeys.BigClouds
-    );
+    this.bigClouds = this.add.tileSprite(this.width / 2, this.height / 2 + 4, this.width, 101, TextureKeys.BigClouds)
   }
 
   setCloudParallax() {
-    this.bigClouds.tilePositionX += 0.5;
+    this.bigClouds.tilePositionX += 0.5
   }
 
   update() {
