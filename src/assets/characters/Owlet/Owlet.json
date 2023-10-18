@@ -1,0 +1,220 @@
+{"frames": [
+
+{
+	"filename": "Owlet_Monster_Attack1_4-0.png",
+	"frame": {"x":134,"y":1,"w":23,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":23,"h":27},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack1_4-1.png",
+	"frame": {"x":208,"y":1,"w":23,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":23,"h":25},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack1_4-2.png",
+	"frame": {"x":1,"y":34,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack1_4-3.png",
+	"frame": {"x":31,"y":31,"w":25,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":25,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-0.png",
+	"frame": {"x":134,"y":1,"w":23,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":23,"h":27},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-1.png",
+	"frame": {"x":233,"y":1,"w":23,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":23,"h":25},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-2.png",
+	"frame": {"x":1,"y":34,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-3.png",
+	"frame": {"x":31,"y":31,"w":25,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":25,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-4.png",
+	"frame": {"x":29,"y":1,"w":27,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":27,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Attack2_6-5.png",
+	"frame": {"x":84,"y":1,"w":23,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":23,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-0.png",
+	"frame": {"x":58,"y":1,"w":24,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":3,"w":24,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-1.png",
+	"frame": {"x":1,"y":1,"w":26,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":31},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-2.png",
+	"frame": {"x":184,"y":31,"w":28,"h":21},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":11,"w":28,"h":21},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-3.png",
+	"frame": {"x":252,"y":43,"w":31,"h":12},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":20,"w":31,"h":12},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-4.png",
+	"frame": {"x":248,"y":28,"w":32,"h":13},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":19,"w":32,"h":13},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-5.png",
+	"frame": {"x":218,"y":46,"w":32,"h":14},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":18,"w":32,"h":14},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-6.png",
+	"frame": {"x":214,"y":28,"w":32,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":16,"w":32,"h":16},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Death_8-7.png",
+	"frame": {"x":184,"y":54,"w":32,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":15,"w":32,"h":8},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Hurt_4-0.png",
+	"frame": {"x":134,"y":30,"w":23,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":23,"h":27},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Hurt_4-1.png",
+	"frame": {"x":58,"y":32,"w":23,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":3,"w":23,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Hurt_4-2.png",
+	"frame": {"x":109,"y":1,"w":23,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":23,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Hurt_4-3.png",
+	"frame": {"x":159,"y":1,"w":23,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":23,"h":27},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Idle_4-0.png",
+	"frame": {"x":159,"y":30,"w":23,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":23,"h":27},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Idle_4-1.png",
+	"frame": {"x":184,"y":1,"w":22,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":4,"w":22,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Idle_4-2.png",
+	"frame": {"x":109,"y":31,"w":23,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":23,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+{
+	"filename": "Owlet_Monster_Idle_4-3.png",
+	"frame": {"x":83,"y":32,"w":24,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":24,"h":27},
+	"sourceSize": {"w":32,"h":32}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "Owlet.png",
+	"format": "RGBA8888",
+	"size": {"w":284,"h":63},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:03bfae01913e807b41473c2533f24777:a5dca828527b1e327ec60ba5d3f3e148:e987da2df932d9ad4790e1ef0a09ff25$"
+}
+}
