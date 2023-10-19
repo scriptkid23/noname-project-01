@@ -72,15 +72,8 @@ export default class MainScene extends Phaser.Scene {
     })
 
     this.events.on(`skill`, ({ id, team, playerCoordinateX, playerCoordinateY }) => {
-      if (id === this.socket.id) {
-        console.log('trigger by event: ', team)
-        this.createSkill(team, playerCoordinateX, playerCoordinateY)
-      } else {
-        console.log('trigger by socket: ', team)
-      }
+      this.createSkill(team, playerCoordinateX, playerCoordinateY)
     })
-
-    this.events.on(`Hurt-${this.socket.id}`, () => {})
 
     //socket
     this.socket.on(EventTypes.SkillFrom, skillPosion => {})
