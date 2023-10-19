@@ -89,13 +89,13 @@ export default class MainScene extends Phaser.Scene {
         fontSize: 32,
         color: '#ffffff'
       })
-      text.setOrigin(0.5) // Đặt gốc của văn bản ở giữa
+      this.events.emit(`death-${playerId}`)
+
+      text.setOrigin(0.5)
     })
 
     this.socket.on(EventTypes.ActivateBeingAttacked, players => {
       Object.keys(players).map(key => {
-        console.log(players[key])
-        console.log(`health-${key}`, players[key])
         this.events.emit(`health-${key}`, players[key].healthy)
       })
     })

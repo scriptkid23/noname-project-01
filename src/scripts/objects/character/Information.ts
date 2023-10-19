@@ -14,7 +14,6 @@ export default class Information extends Phaser.GameObjects.Container {
     this.line = scene.add.image(-12, -2, TextureKeys.Line).setOrigin(0, 0)
     this.line.setScale(0.8)
 
-    // Đặt màu đỏ cho thanh máu
     this.add(healthBar)
     this.add(this.line)
 
