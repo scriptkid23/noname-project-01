@@ -35,29 +35,5 @@ export default class Skill extends Phaser.GameObjects.Sprite {
       }),
       frameRate: 25
     })
-
-    this.anims.create({
-      key: AnimationKeys.UntilEnd,
-      frames: this.anims.generateFrameNames(TextureKeys.Until, {
-        start: 1,
-        end: 70,
-        zeroPad: 4,
-        prefix: 'frame',
-        suffix: '.png'
-      }),
-      frameRate: 25
-    })
-    this.anims.create({
-      key: AnimationKeys.UntilStart,
-      frames: this.anims.generateFrameNames(TextureKeys.Until, {
-        start: 71,
-        end: 74,
-        prefix: 'frame',
-        zeroPad: 4,
-        suffix: '.png'
-      }),
-      frameRate: 25,
-      repeat: -1
-    })
   }
 }

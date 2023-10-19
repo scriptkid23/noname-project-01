@@ -27,7 +27,7 @@ export default class Character extends Phaser.GameObjects.Sprite {
       this.play(AnimationKeys.CharacterAttack1)
     })
 
-    this.scene.events.on(`Hurt-${id}`, () => {
+    this.scene.events.on(`hurt-${id}`, () => {
       this.play(AnimationKeys.CharacterHurt)
     })
 
@@ -35,7 +35,7 @@ export default class Character extends Phaser.GameObjects.Sprite {
       console.log(animation.key)
       switch (animation.key) {
         case AnimationKeys.CharacterAttack1:
-          this.scene.events.emit(`skill`, id)
+          this.scene.events.emit(`skill`, { id: id, team: team, playerCoordinateX: this.x, playerCoordinateY: this.y })
           break
 
         default:
@@ -44,6 +44,13 @@ export default class Character extends Phaser.GameObjects.Sprite {
 
       this.play(AnimationKeys.CharacterIdle)
     })
+
+    scene.physics.add.existing(this)
+
+    const body = this.body as Phaser.Physics.Arcade.Body
+    body.setSize(20, body.height);
+    body.setOffset(team=== Team.Red ? body.offset.x - 10: body.offset.x + 10, body.offset.y);
+
 
     scene.add.existing(this)
   }

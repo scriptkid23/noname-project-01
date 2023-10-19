@@ -71,13 +71,13 @@ export default class MainScene extends Phaser.Scene {
       this.socket.emit(EventTypes.CurrentlyAttacking)
     })
 
-    this.events.on(`skill`, (id) => {
-        if(id === this.socket.id){
-          console.log("trigger by event")
-        }
-        else {
-          console.log("trigger by socket")
-        }
+    this.events.on(`skill`, ({ id, team, playerCoordinateX, playerCoordinateY }) => {
+      if (id === this.socket.id) {
+        console.log('trigger by event: ', team)
+        this.createSkill(team, playerCoordinateX, playerCoordinateY)
+      } else {
+        console.log('trigger by socket: ', team)
+      }
     })
 
     this.events.on(`Hurt-${this.socket.id}`, () => {})
@@ -134,6 +134,36 @@ export default class MainScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-DOWN', this.handleDown, this)
     this.input.keyboard?.on('keydown-LEFT', this.handleLeft, this)
     this.input.keyboard?.on('keydown-RIGHT', this.handleRight, this)
+  }
+
+  createSkill(team: Team, playerCoordinateX: number, playerCoordinateY: number) {
+    const x = team === Team.Red ? playerCoordinateX + 30 : playerCoordinateX - 30
+    const to = this.width - playerCoordinateX
+
+    const flip = team === Team.Red ? false : true
+
+    const skill = new Skill(this, x, playerCoordinateY + 6).setFlip(flip, false)
+    this.characterGroup.add(skill)
+
+    this.tweens.add({
+      targets: skill,
+      x: to,
+      duration: 300,
+      ease: 'Power1'
+    })
+
+    this.physics.add.overlap(skill, this.characterGroup, this.handleSkillOverlap, undefined, this)
+  }
+
+  private handleSkillOverlap(
+    object1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
+    object2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+  ) {
+    if (!(object1 instanceof Phaser.GameObjects.Sprite && object2 instanceof Phaser.GameObjects.Sprite)) return
+
+    object1.destroy()
+    const targetId = object2.getData('id')
+    this.events.emit(`hurt-${targetId}`)
   }
 
   createOwnPlayer(player) {
