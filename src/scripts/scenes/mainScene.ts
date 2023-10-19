@@ -37,7 +37,6 @@ export default class MainScene extends Phaser.Scene {
   private height: number
   private characterGroup: Phaser.Physics.Arcade.Group
   private team: Team
-  private playerId: string
   private canPlay: boolean = false
   private challengeFactory: ChallengeFactory
 
@@ -66,13 +65,19 @@ export default class MainScene extends Phaser.Scene {
     this.readyButton(this.socket)
 
     //event
-    this.events.on(`Attack`, id => {
-      this.events.emit(`active-attacking-${id}`)
+
+    this.events.on(`attack-${this.socket.id}`, () => {
+      this.events.emit(`active-attacking-${this.socket.id}`)
       this.socket.emit(EventTypes.CurrentlyAttacking)
     })
 
-    this.events.on(`Skill`, () => {
-      console.log(`attack`)
+    this.events.on(`skill`, (id) => {
+        if(id === this.socket.id){
+          console.log("trigger by event")
+        }
+        else {
+          console.log("trigger by socket")
+        }
     })
 
     this.events.on(`Hurt-${this.socket.id}`, () => {})
@@ -84,7 +89,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.socket.on(EventTypes.ActivateCurrentlyAttacking, data => {
       // active from other player
-      if (data.id === this.playerId) return
+      if (data.id === this.socket.id) return
       this.events.emit(`active-attacking-${data.id}`)
     })
 
@@ -136,7 +141,6 @@ export default class MainScene extends Phaser.Scene {
     this.characterGroup.add(character)
     this.players[player.id] = character
     this.team = player.team
-    this.playerId = player.id
     character.setData('id', player.id)
     character.setData('name', player.name)
     character.setData('team', player.team)
@@ -160,7 +164,7 @@ export default class MainScene extends Phaser.Scene {
       countdownText.destroy()
       countdownTimer.remove(false)
       this.canPlay = true
-      this.challengeFactory = new ChallengeFactory(scene, createRandomChallenge(), this.playerId)
+      this.challengeFactory = new ChallengeFactory(scene, createRandomChallenge(), this.socket.id)
     }
   }
 

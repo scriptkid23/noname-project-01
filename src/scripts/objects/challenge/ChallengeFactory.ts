@@ -10,12 +10,12 @@ enum ChallengeFactoryStatus {
 export default class ChallengeFactory extends Phaser.GameObjects.Layer {
   private challengeList: Challenge[] = []
   private status: ChallengeFactoryStatus = ChallengeFactoryStatus.Processing
-  private playerId: string;
+  private playerId: string
   private currentChallenge: Challenge | undefined
 
   constructor(scene: Phaser.Scene, challenges: any, playerId: string) {
     super(scene)
-    this.playerId = playerId;
+    this.playerId = playerId
     challenges.map(challenge => {
       this.challengeList = [...this.challengeList, new Challenge(scene, challenge)]
     })
@@ -58,8 +58,8 @@ export default class ChallengeFactory extends Phaser.GameObjects.Layer {
         break
       }
       case ChallengeFactoryStatus.Done:
-        this.scene.events.emit('Attack', this.playerId)
         this.status = ChallengeFactoryStatus.Processing
+        this.scene.events.emit(`attack-${this.playerId}`)
         break
 
       case ChallengeFactoryStatus.Empty: {
