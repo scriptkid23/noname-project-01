@@ -76,9 +76,25 @@ export default class MainScene extends Phaser.Scene {
     })
 
     //socket
-    this.socket.on(EventTypes.SkillFrom, skillPosion => {})
+    this.socket.on(EventTypes.Loser, playerId => {
+      this.canPlay = false
 
-    this.socket.on(EventTypes.ActivateBeingAttacked, target => {})
+      var rect = this.add.rectangle(200, 320, 200, 80, 0x000000)
+      rect.setInteractive()
+
+      var text = this.add.text(200, 320, playerId === this.socket.id ? 'Lose' : 'Win', {
+        fontFamily: 'Arial',
+        fontSize: 32,
+        color: '#ffffff'
+      })
+      text.setOrigin(0.5) // Đặt gốc của văn bản ở giữa
+    })
+
+    this.socket.on(EventTypes.ActivateBeingAttacked, players => {
+      Object.keys(players).map(key => {
+        console.log(players[key])
+      })
+    })
 
     this.socket.on(EventTypes.ActivateCurrentlyAttacking, data => {
       // active from other player
@@ -156,6 +172,7 @@ export default class MainScene extends Phaser.Scene {
 
     object1.destroy()
     const targetId = object2.getData('id')
+    targetId === this.socket.id && this.socket.emit(EventTypes.BeingAttacked)
     this.events.emit(`hurt-${targetId}`)
   }
 

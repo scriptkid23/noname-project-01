@@ -11,7 +11,8 @@ export enum EventTypes {
   PlayerReady = 'PLAYER_READY',
   CanPlay = 'CAN_PLAY',
   InitSkill = 'INIT_SKILL',
-  SkillFrom = 'SKILL_FROM'
+  SkillFrom = 'SKILL_FROM',
+  Loser = "LOSER",
 }
 
 export enum TextureKeys {
@@ -23,7 +24,9 @@ export enum TextureKeys {
   LeftButton = 'Left Button',
   RightButton = 'Right Button',
   Skill = 'Skill',
-  Until = 'Until'
+  Until = 'Until',
+  HealthBar = "HeathBar"
+  
 }
 
 export enum AnimationKeys {

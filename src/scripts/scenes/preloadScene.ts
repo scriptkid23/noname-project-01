@@ -48,6 +48,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.atlas(TextureKeys.Skill, 'assets/skill/owlet-skill.png', 'assets/skill/owlet-skill.json')
 
     this.load.image(TextureKeys.BigClouds, 'assets/environments/maps/treasure-hunters/Background/Big Clouds.png')
+
+    this.load.image(TextureKeys.HealthBar, 'assets/healthbar.png')
   }
 
   create() {
