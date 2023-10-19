@@ -23,7 +23,6 @@ export default class Character extends Phaser.GameObjects.Sprite {
     this.play(AnimationKeys.CharacterIdle)
 
     this.scene.events.on(`active-attacking-${id}`, () => {
-      console.log('trigger event')
       this.play(AnimationKeys.CharacterAttack1)
     })
 
@@ -36,7 +35,6 @@ export default class Character extends Phaser.GameObjects.Sprite {
     })
 
     this.on('animationcomplete', (animation, frame) => {
-      console.log(animation.key)
       switch (animation.key) {
         case AnimationKeys.CharacterAttack1:
           this.scene.events.emit(`skill`, { id: id, team: team, playerCoordinateX: this.x, playerCoordinateY: this.y })

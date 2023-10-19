@@ -18,7 +18,6 @@ export default class Information extends Phaser.GameObjects.Container {
     this.add(this.line)
 
     this.scene.events.on(`health-${id}`, health => {
-      console.log(health)
       this.setHealth(health)
     })
     scene.add.existing(this)

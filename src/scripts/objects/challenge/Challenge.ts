@@ -1,13 +1,19 @@
 import * as Phaser from 'phaser'
 import Button from '../button/Button'
-import { EventKeys, InstructionKeys } from '../../../constants'
+import { EventKeys, InstructionKeys, TextureKeys } from '../../../constants'
 import UpButton from '../button/Up'
 import DownButton from '../button/Down'
 import LeftButton from '../button/Left'
 import RightButton from '../button/Right'
 
+const challengeDestroyTime = 1000
+
+const punishmentTime = 3000
+
 export default class Challenge extends Phaser.GameObjects.Container {
   private challengeList: Button[] = new Array()
+  private isWorking: boolean = true
+  private lock: Phaser.GameObjects.Sprite
 
   public size: number
 
@@ -20,6 +26,14 @@ export default class Challenge extends Phaser.GameObjects.Container {
     const challengeY = scene.scale.height / 2 - 150
 
     this.setPosition(challengeX, challengeY) // Đặt vị trí của container
+
+    this.lock = this.scene.add.sprite(55, -50, TextureKeys.Lock)
+
+    this.lock.setVisible(false)
+    this.on('lock', flag => {
+      this.lock.setVisible(flag)
+    })
+    this.scene.add.existing(this.lock)
 
     this.size = challenges.length
 
@@ -47,8 +61,14 @@ export default class Challenge extends Phaser.GameObjects.Container {
       }
     })
     this.add(this.challengeList)
+    this.add(this.lock)
 
     this.on(EventKeys.Press, data => {
+      if (!this.isWorking) {
+        this.shake()
+        return
+      }
+
       if (this.challengeList.length > 0 && data === this.challengeList[0].key) {
         this.challengeList[0].remove()
         this.challengeList.shift()
@@ -57,9 +77,32 @@ export default class Challenge extends Phaser.GameObjects.Container {
         if (this.size === 0) {
           setTimeout(() => {
             this.destroy()
-          }, 1000)
+          }, challengeDestroyTime)
         }
+      } else {
+        this.shake()
+        this.isWorking = false
+        this.emit('lock', true)
+
+        setTimeout(() => {
+          this.isWorking = true
+          this.emit('lock', false)
+        }, punishmentTime)
       }
+    })
+  }
+  shake() {
+    const duration = 50
+
+    const tweens = this.scene.tweens
+
+    tweens.add({
+      targets: this,
+      x: this.x - 5,
+      duration: duration,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      repeat: 5
     })
   }
 

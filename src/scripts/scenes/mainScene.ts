@@ -183,7 +183,6 @@ export default class MainScene extends Phaser.Scene {
 
   createOwnPlayer(player) {
     const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
-    console.log(player.coordinate.x, player.coordinate.y)
     this.informationGroup[player.id] = new Information(this, player.coordinate.x, player.coordinate.y - 21, player.id)
 
     this.characterGroup.add(character)

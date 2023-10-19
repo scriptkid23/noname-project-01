@@ -52,6 +52,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image(TextureKeys.HealthBar, 'assets/healthbar.png')
 
     this.load.image(TextureKeys.Line, 'assets/line.png')
+
+    this.load.image(TextureKeys.Lock, 'assets/lock.png')
   }
 
   create() {
