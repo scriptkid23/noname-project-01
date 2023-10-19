@@ -50,6 +50,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image(TextureKeys.BigClouds, 'assets/environments/maps/treasure-hunters/Background/Big Clouds.png')
 
     this.load.image(TextureKeys.HealthBar, 'assets/healthbar.png')
+
+    this.load.image(TextureKeys.Line, 'assets/line.png')
   }
 
   create() {

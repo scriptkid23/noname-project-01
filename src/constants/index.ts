@@ -25,7 +25,8 @@ export enum TextureKeys {
   RightButton = 'Right Button',
   Skill = 'Skill',
   Until = 'Until',
-  HealthBar = "HeathBar"
+  HealthBar = "HeathBar",
+  Line = "Line"
   
 }
 

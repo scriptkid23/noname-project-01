@@ -14,13 +14,14 @@ import {
   TileLayerName,
   TileMapKeys
 } from '../../constants'
-import { Players } from '../../types'
+import { InformationGroup, Players } from '../../types'
 import { Scene } from 'phaser'
 import WaterReflect from '../objects/WaterReflect'
 import Character from '../objects/character/Character'
 import ChallengeFactory from '../objects/challenge/ChallengeFactory'
 import { createRandomChallenge } from '../utils'
 import Skill from '../objects/skill/Skill'
+import Information from '../objects/character/Information'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -39,6 +40,7 @@ export default class MainScene extends Phaser.Scene {
   private team: Team
   private canPlay: boolean = false
   private challengeFactory: ChallengeFactory
+  private informationGroup: InformationGroup = {}
 
   constructor() {
     super(SceneKeys.MainScene)
@@ -93,6 +95,8 @@ export default class MainScene extends Phaser.Scene {
     this.socket.on(EventTypes.ActivateBeingAttacked, players => {
       Object.keys(players).map(key => {
         console.log(players[key])
+        console.log(`health-${key}`, players[key])
+        this.events.emit(`health-${key}`, players[key].healthy)
       })
     })
 
@@ -119,6 +123,7 @@ export default class MainScene extends Phaser.Scene {
     this.socket.on(EventTypes.PlayerLeft, id => {
       if (!this.players[id]) return
 
+      this.informationGroup[id].destroy()
       this.players[id].destroy()
     })
 
@@ -178,6 +183,9 @@ export default class MainScene extends Phaser.Scene {
 
   createOwnPlayer(player) {
     const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
+    console.log(player.coordinate.x, player.coordinate.y)
+    this.informationGroup[player.id] = new Information(this, player.coordinate.x, player.coordinate.y - 21, player.id)
+
     this.characterGroup.add(character)
     this.players[player.id] = character
     this.team = player.team
@@ -189,6 +197,7 @@ export default class MainScene extends Phaser.Scene {
   createOtherPlayer(player) {
     const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
 
+    this.informationGroup[player.id] = new Information(this, player.coordinate.x, player.coordinate.y - 21, player.id)
     this.characterGroup.add(character)
     this.players[player.id] = character
     character.setData('id', player.id)

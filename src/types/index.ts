@@ -37,3 +37,7 @@ export type Player = {
 export type Players = {
   [id: string]: Phaser.GameObjects.Sprite;
 }
+
+export type InformationGroup = {
+  [id: string]: Phaser.GameObjects.Container;
+}
