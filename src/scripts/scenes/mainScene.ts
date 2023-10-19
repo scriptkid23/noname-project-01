@@ -37,6 +37,8 @@ export default class MainScene extends Phaser.Scene {
   private height: number
   private characterGroup: Phaser.Physics.Arcade.Group
   private team: Team
+  private playerId: string
+  private canPlay: boolean = false
   private challengeFactory: ChallengeFactory
 
   constructor() {
@@ -45,6 +47,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.socket.emit(EventTypes.JoinRoom, 'room00')
+
     const map = this.make.tilemap({
       key: TileMapKeys.TreatureHunters
     })
@@ -59,9 +63,30 @@ export default class MainScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, this.width, this.height)
     this.physics.add.collider(this.characterGroup, this.ground)
 
-    this.socket.emit(EventTypes.JoinRoom, 'room00')
-
     this.readyButton(this.socket)
+
+    //event
+    this.events.on(`Attack`, id => {
+      this.events.emit(`active-attacking-${id}`)
+      this.socket.emit(EventTypes.CurrentlyAttacking)
+    })
+
+    this.events.on(`Skill`, () => {
+      console.log(`attack`)
+    })
+
+    this.events.on(`Hurt-${this.socket.id}`, () => {})
+
+    //socket
+    this.socket.on(EventTypes.SkillFrom, skillPosion => {})
+
+    this.socket.on(EventTypes.ActivateBeingAttacked, target => {})
+
+    this.socket.on(EventTypes.ActivateCurrentlyAttacking, data => {
+      // active from other player
+      if (data.id === this.playerId) return
+      this.events.emit(`active-attacking-${data.id}`)
+    })
 
     this.socket.on(EventTypes.FetchPlayers, players => {
       Object.keys(players).map(key => {
@@ -100,43 +125,6 @@ export default class MainScene extends Phaser.Scene {
       })
     })
 
-    this.events.on(`Attack`, () => {
-      this.socket.emit(EventTypes.CurrentlyAttacking)
-    })
-
-    this.events.on(`Skill-${this.socket.id}`, () => {
-      this.socket.emit(EventTypes.InitSkill)
-    })
-
-    this.events.on(`Hurt-${this.socket.id}`, () => {})
-
-    this.socket.on(EventTypes.SkillFrom, skillPosion => {
-      const isFlip = skillPosion.to > this.width / 2 ? false : true
-      let skill = new Skill(this, skillPosion.coordinate.x, skillPosion.coordinate.y).setFlip(isFlip, false)
-
-      this.add.existing(skill)
-      this.tweens.add({
-        targets: skill,
-        x: skillPosion.to,
-
-        duration: 500,
-        ease: 'Linear',
-        onComplete: () => {
-          skill.play(AnimationKeys.SkillEnd)
-          skill.on('animationcomplete', () => {
-            this.socket.id !== skillPosion.owner && this.socket.emit(EventTypes.BeingAttacked, this.socket.id)
-            skill.destroy()
-          })
-        }
-      })
-    })
-    this.socket.on(EventTypes.ActivateBeingAttacked, target => {
-      this.events.emit(`Hurt-${target}`)
-    })
-    this.socket.on(EventTypes.ActivateCurrentlyAttacking, id => {
-      this.events.emit(`active-attacking-${id}`)
-    })
-
     this.input.keyboard?.on('keydown-UP', this.handleUp, this)
     this.input.keyboard?.on('keydown-DOWN', this.handleDown, this)
     this.input.keyboard?.on('keydown-LEFT', this.handleLeft, this)
@@ -148,12 +136,20 @@ export default class MainScene extends Phaser.Scene {
     this.characterGroup.add(character)
     this.players[player.id] = character
     this.team = player.team
+    this.playerId = player.id
+    character.setData('id', player.id)
+    character.setData('name', player.name)
+    character.setData('team', player.team)
   }
 
   createOtherPlayer(player) {
     const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
+
     this.characterGroup.add(character)
     this.players[player.id] = character
+    character.setData('id', player.id)
+    character.setData('name', player.name)
+    character.setData('team', player.team)
   }
 
   updateCountdown(scene: Phaser.Scene) {
@@ -163,7 +159,8 @@ export default class MainScene extends Phaser.Scene {
     if (countdownValue <= 0) {
       countdownText.destroy()
       countdownTimer.remove(false)
-      this.challengeFactory = new ChallengeFactory(scene, createRandomChallenge())
+      this.canPlay = true
+      this.challengeFactory = new ChallengeFactory(scene, createRandomChallenge(), this.playerId)
     }
   }
 
@@ -177,6 +174,7 @@ export default class MainScene extends Phaser.Scene {
     rect.on('pointerdown', function () {
       socket.emit(EventTypes.PlayerReady)
       rect.destroy()
+      text.destroy()
       //TODO:
     })
   }
@@ -207,19 +205,19 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private handleUp() {
-    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Up)
+    this.canPlay && this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Up)
   }
 
   private handleDown() {
-    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Down)
+    this.canPlay && this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Down)
   }
 
   private handleLeft() {
-    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Left)
+    this.canPlay && this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Left)
   }
 
   private handleRight() {
-    this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Right)
+    this.canPlay && this.challengeFactory.emit(EventKeys.Press, InstructionKeys.Right)
   }
 
   update() {
