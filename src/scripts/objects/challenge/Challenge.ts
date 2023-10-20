@@ -14,7 +14,7 @@ export default class Challenge extends Phaser.GameObjects.Container {
   private challengeList: Button[] = new Array()
   private isWorking: boolean = true
   private lock: Phaser.GameObjects.Sprite
-
+  private positionX: number
   public size: number
 
   constructor(scene: Phaser.Scene, challenges: number[]) {
@@ -25,7 +25,9 @@ export default class Challenge extends Phaser.GameObjects.Container {
     const challengeX = (scene.scale.width - width) / 2 + 15
     const challengeY = scene.scale.height / 2 - 150
 
-    this.setPosition(challengeX, challengeY) // Đặt vị trí của container
+    this.setPosition(challengeX, challengeY)
+
+    this.positionX = challengeX
 
     this.lock = this.scene.add.sprite(55, -50, TextureKeys.Lock)
 
@@ -92,17 +94,25 @@ export default class Challenge extends Phaser.GameObjects.Container {
     })
   }
   shake() {
-    const duration = 50
+    const amplitude = 5
+    const frequency = 1
+    const duration = 300
+    let counter = 0
 
-    const tweens = this.scene.tweens
-
-    tweens.add({
+    this.scene.tweens.add({
       targets: this,
-      x: this.x - 5,
       duration: duration,
       ease: 'Sine.easeInOut',
+      x: this.x - 5,
       yoyo: true,
-      repeat: 5
+      repeat: 0,
+      onComplete: () => {
+        this.x = this.positionX
+      },
+      onUpdate: () => {
+        this.x = this.positionX + amplitude * Math.sin(frequency * counter)
+        counter++
+      }
     })
   }
 
