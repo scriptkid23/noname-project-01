@@ -22,6 +22,7 @@ import ChallengeFactory from '../objects/challenge/ChallengeFactory'
 import { createRandomChallenge } from '../utils'
 import Skill from '../objects/skill/Skill'
 import Information from '../objects/character/Information'
+import Pannel from '../objects/Pannel'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -130,10 +131,10 @@ export default class MainScene extends Phaser.Scene {
     this.socket.on(EventTypes.CanPlay, canPlay => {
       if (!canPlay) return
 
-      countdownText = this.add.text(200, 320, `${countdownValue}`, {
-        fontFamily: 'Arial',
-        fontSize: 32,
-        color: '#000000'
+      countdownText = this.add.text(200, 160, `${countdownValue}`, {
+        fontFamily: '"Press Start 2P"',
+        fontSize: 50,
+       
       })
       countdownText.setOrigin(0.5)
 
@@ -217,18 +218,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private readyButton(socket: Socket) {
-    var rect = this.add.rectangle(200, 320, 200, 80, 0x000000)
-    rect.setInteractive()
-
-    var text = this.add.text(200, 320, 'Ready', { fontFamily: 'Arial', fontSize: 32, color: '#ffffff' })
-    text.setOrigin(0.5) // Đặt gốc của văn bản ở giữa
-
-    rect.on('pointerdown', function () {
+    new Pannel(this, 200, 200, () => {
       socket.emit(EventTypes.PlayerReady)
-      rect.destroy()
-      text.destroy()
-      //TODO:
-    })
+    }).setScale(3, 3)
+
+    // socket.emit(EventTypes.PlayerReady)
   }
 
   private loadMap(map: Phaser.Tilemaps.Tilemap, types: TileLayerKeysType[]) {

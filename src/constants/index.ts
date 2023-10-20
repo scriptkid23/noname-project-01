@@ -15,6 +15,13 @@ export enum EventTypes {
   Loser = "LOSER",
 }
 
+export enum FontKeys {
+    PixelHight = "PixelHight",
+    PixelMiddle = "PixelMiddle",
+    PixelSmall = "PixelSmall"
+}
+
+
 export enum TextureKeys {
   WaterReflect = 'Water Reflect',
   BigClouds = 'Big Cloud',
@@ -27,7 +34,9 @@ export enum TextureKeys {
   Until = 'Until',
   HealthBar = "HeathBar",
   Line = "Line",
-  Lock = "Lock"
+  Lock = "Lock",
+  Pannel = "Pannel",
+  Start = "Start"
   
 }
 

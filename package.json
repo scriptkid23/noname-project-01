@@ -45,6 +45,7 @@
     "phaser": "^3.60.0",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "webfontloader": "^1.6.28",
     "yarn": "^1.22.19"
   },
   "devDependencies": {

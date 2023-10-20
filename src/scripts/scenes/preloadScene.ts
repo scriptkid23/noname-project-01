@@ -1,4 +1,5 @@
-import { SceneKeys, TextureKeys, TileKeys, TileMapKeys } from '../../constants'
+import { FontKeys, SceneKeys, TextureKeys, TileKeys, TileMapKeys } from '../../constants'
+import WebFontFile from '../WebFontLoader'
 
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -43,6 +44,11 @@ export default class PreloadScene extends Phaser.Scene {
       frameHeight: 34
     })
 
+    this.load.spritesheet(TextureKeys.Start, 'assets/start.png', {
+      frameWidth: 30,
+      frameHeight: 14
+    })
+
     this.load.atlas(TextureKeys.Character, 'assets/characters/Owlet/Owlet.png', 'assets/characters/Owlet/Owlet.json')
 
     this.load.atlas(TextureKeys.Skill, 'assets/skill/owlet-skill.png', 'assets/skill/owlet-skill.json')
@@ -54,6 +60,10 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image(TextureKeys.Line, 'assets/line.png')
 
     this.load.image(TextureKeys.Lock, 'assets/lock.png')
+
+    this.load.image(TextureKeys.Pannel, 'assets/pannel.png')
+
+    this.load.addFile(new WebFontFile(this.load, 'Press Start 2P'))
   }
 
   create() {
