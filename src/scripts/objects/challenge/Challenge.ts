@@ -29,7 +29,7 @@ export default class Challenge extends Phaser.GameObjects.Container {
 
     this.positionX = challengeX
 
-    this.lock = this.scene.add.sprite(55, -50, TextureKeys.Lock)
+    this.lock = this.scene.add.sprite(55, -50, TextureKeys.Lock).setScale(3)
 
     this.lock.setVisible(false)
     this.on('lock', flag => {

@@ -23,6 +23,7 @@ import { createRandomChallenge } from '../utils'
 import Skill from '../objects/skill/Skill'
 import Information from '../objects/character/Information'
 import Pannel from '../objects/Pannel'
+import Focus from '../objects/Focus'
 
 var countdownText
 var countdownValue = 3 // Thời gian countdown (giây)
@@ -133,8 +134,7 @@ export default class MainScene extends Phaser.Scene {
 
       countdownText = this.add.text(200, 160, `${countdownValue}`, {
         fontFamily: '"Press Start 2P"',
-        fontSize: 50,
-       
+        fontSize: 50
       })
       countdownText.setOrigin(0.5)
 
@@ -184,6 +184,8 @@ export default class MainScene extends Phaser.Scene {
 
   createOwnPlayer(player) {
     const character = new Character(this, player.coordinate.x, player.coordinate.y, player.id, player.team)
+    new Focus(this, player.coordinate.x - 1, player.coordinate.y - 40)
+
     this.informationGroup[player.id] = new Information(this, player.coordinate.x, player.coordinate.y - 21, player.id)
 
     this.characterGroup.add(character)

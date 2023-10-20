@@ -36,7 +36,8 @@ export enum TextureKeys {
   Line = "Line",
   Lock = "Lock",
   Pannel = "Pannel",
-  Start = "Start"
+  Start = "Start",
+  Focus = "Focus"
   
 }
 

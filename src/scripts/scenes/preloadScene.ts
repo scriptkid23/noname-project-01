@@ -49,6 +49,11 @@ export default class PreloadScene extends Phaser.Scene {
       frameHeight: 14
     })
 
+    this.load.spritesheet(TextureKeys.Focus, 'assets/focus.png', {
+      frameWidth: 20,
+      frameHeight: 24
+    } )
+
     this.load.atlas(TextureKeys.Character, 'assets/characters/Owlet/Owlet.png', 'assets/characters/Owlet/Owlet.json')
 
     this.load.atlas(TextureKeys.Skill, 'assets/skill/owlet-skill.png', 'assets/skill/owlet-skill.json')
