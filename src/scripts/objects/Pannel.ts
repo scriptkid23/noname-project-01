@@ -7,6 +7,7 @@ export default class Pannel extends Phaser.GameObjects.Container {
 
     const pannel = this.scene.add.sprite(0, 0, TextureKeys.Pannel)
     const start = this.scene.add.sprite(0, 0, TextureKeys.Start)
+
     start.setInteractive()
 
     this.scene.anims.create({

@@ -46,103 +46,105 @@ export default class MainScene extends Phaser.Scene {
 
   constructor() {
     super(SceneKeys.MainScene)
-    this.socket = io('http://localhost:8080')
+    this.socket = io('https://noname-cexg.onrender.com/')
   }
 
   create() {
-    this.socket.emit(EventTypes.JoinRoom, 'room00')
+    this.width = this.scale.width
+    this.height = this.scale.height
 
     const map = this.make.tilemap({
       key: TileMapKeys.TreatureHunters
     })
-    this.width = this.scale.width
-    this.height = this.scale.height
 
     this.characterGroup = this.physics.add.group()
 
     this.loadMap(map, TileLayerKeys)
-
     this.cameras.main.setBounds(0, 0, this.width, this.height)
     this.physics.world.setBounds(0, 0, this.width, this.height)
     this.physics.add.collider(this.characterGroup, this.ground)
 
-    this.readyButton(this.socket)
+    this.socket.on('connect', () => {
+      this.socket.emit(EventTypes.JoinRoom, 'room00')
 
-    //event
+      //event
 
-    this.events.on(`attack-${this.socket.id}`, () => {
-      this.events.emit(`active-attacking-${this.socket.id}`)
-      this.socket.emit(EventTypes.CurrentlyAttacking)
-    })
-
-    this.events.on(`skill`, ({ id, team, playerCoordinateX, playerCoordinateY }) => {
-      this.createSkill(team, playerCoordinateX, playerCoordinateY)
-    })
-
-    //socket
-    this.socket.on(EventTypes.Loser, playerId => {
-      this.canPlay = false
-
-      var rect = this.add.rectangle(200, 320, 200, 80, 0x000000)
-      rect.setInteractive()
-
-      var text = this.add.text(200, 320, playerId === this.socket.id ? 'Lose' : 'Win', {
-        fontFamily: 'Arial',
-        fontSize: 32,
-        color: '#ffffff'
+      this.events.on(`attack-${this.socket.id}`, () => {
+        this.events.emit(`active-attacking-${this.socket.id}`)
+        this.socket.emit(EventTypes.CurrentlyAttacking)
       })
-      this.events.emit(`death-${playerId}`)
 
-      text.setOrigin(0.5)
-    })
-
-    this.socket.on(EventTypes.ActivateBeingAttacked, players => {
-      Object.keys(players).map(key => {
-        this.events.emit(`health-${key}`, players[key].healthy)
+      this.events.on(`skill`, ({ id, team, playerCoordinateX, playerCoordinateY }) => {
+        this.createSkill(team, playerCoordinateX, playerCoordinateY)
       })
-    })
 
-    this.socket.on(EventTypes.ActivateCurrentlyAttacking, data => {
-      // active from other player
-      if (data.id === this.socket.id) return
-      this.events.emit(`active-attacking-${data.id}`)
-    })
+      //socket
+      this.socket.on(EventTypes.Loser, playerId => {
+        this.canPlay = false
 
-    this.socket.on(EventTypes.FetchPlayers, players => {
-      Object.keys(players).map(key => {
-        if (key === this.socket.id) {
-          this.createOwnPlayer(players[key])
-        } else {
-          this.createOtherPlayer(players[key])
-        }
+        var rect = this.add.rectangle(200, 320, 200, 80, 0x000000)
+        rect.setInteractive()
+
+        var text = this.add.text(200, 320, playerId === this.socket.id ? 'Lose' : 'Win', {
+          fontFamily: '"Press Start 2P"',
+          fontSize: 32,
+          color: '#ffffff'
+        })
+        this.events.emit(`death-${playerId}`)
+
+        text.setOrigin(0.5)
       })
-    })
 
-    this.socket.on(EventTypes.PlayerJoined, player => {
-      this.createOtherPlayer(player)
-    })
-
-    this.socket.on(EventTypes.PlayerLeft, id => {
-      if (!this.players[id]) return
-
-      this.informationGroup[id].destroy()
-      this.players[id].destroy()
-    })
-
-    this.socket.on(EventTypes.CanPlay, canPlay => {
-      if (!canPlay) return
-
-      countdownText = this.add.text(200, 160, `${countdownValue}`, {
-        fontFamily: '"Press Start 2P"',
-        fontSize: 50
+      this.socket.on(EventTypes.ActivateBeingAttacked, players => {
+        Object.keys(players).map(key => {
+          this.events.emit(`health-${key}`, players[key].healthy)
+        })
       })
-      countdownText.setOrigin(0.5)
 
-      countdownTimer = this.time.addEvent({
-        delay: 1000,
-        callback: () => this.updateCountdown(this),
-        loop: true
+      this.socket.on(EventTypes.ActivateCurrentlyAttacking, data => {
+        // active from other player
+        if (data.id === this.socket.id) return
+        this.events.emit(`active-attacking-${data.id}`)
       })
+
+      this.socket.on(EventTypes.FetchPlayers, players => {
+        Object.keys(players).map(key => {
+          if (key === this.socket.id) {
+            this.createOwnPlayer(players[key])
+          } else {
+            this.createOtherPlayer(players[key])
+          }
+        })
+      })
+
+      this.socket.on(EventTypes.PlayerJoined, player => {
+        this.createOtherPlayer(player)
+      })
+
+      this.socket.on(EventTypes.PlayerLeft, id => {
+        if (!this.players[id]) return
+
+        this.informationGroup[id].destroy()
+        this.players[id].destroy()
+      })
+
+      this.socket.on(EventTypes.CanPlay, canPlay => {
+        if (!canPlay) return
+
+        countdownText = this.add.text(200, 160, `${countdownValue}`, {
+          fontFamily: '"Press Start 2P"',
+          fontSize: 50
+        })
+        countdownText.setOrigin(0.5)
+
+        countdownTimer = this.time.addEvent({
+          delay: 1000,
+          callback: () => this.updateCountdown(this),
+          loop: true
+        })
+      })
+
+      this.readyButton(this.socket)
     })
 
     this.input.keyboard?.on('keydown-UP', this.handleUp, this)
